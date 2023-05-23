@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FileInsurancePolicies.Domain.Entities\FileInsurancePolicies.Domain.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

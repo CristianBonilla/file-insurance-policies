@@ -14,4 +14,11 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FileInsurancePolicies.Contracts\FileInsurancePolicies.Contracts.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Domain.Entities\FileInsurancePolicies.Domain.Entities.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Domain\FileInsurancePolicies.Domain.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Infrastructure\FileInsurancePolicies.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
