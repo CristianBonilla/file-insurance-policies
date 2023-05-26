@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FileInsurancePolicies.Contracts\FileInsurancePolicies.Contracts.csproj" />
-    <ProjectReference Include="..\FileInsurancePolicies.Domain.Entities\FileInsurancePolicies.Domain.Entities.csproj" />
-    <ProjectReference Include="..\FileInsurancePolicies.Infrastructure\FileInsurancePolicies.Infrastructure.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Contracts\Vehicle.InsurancePolicies.Contracts.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Domain.Entities\Vehicle.InsurancePolicies.Domain.Entities.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Infrastructure\Vehicle.InsurancePolicies.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

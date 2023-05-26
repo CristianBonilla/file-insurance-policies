@@ -1,4 +1,4 @@
-namespace FileInsurancePolicies.Domain.Entities
+namespace Vehicle.InsurancePolicies.Domain.Entities
 {
   public class CoverageEntity
   {

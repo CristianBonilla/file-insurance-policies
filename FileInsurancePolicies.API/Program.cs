@@ -1,4 +1,4 @@
-namespace FileInsurancePolicies.API
+namespace Vehicle.InsurancePolicies.API
 {
   public class Program
   {

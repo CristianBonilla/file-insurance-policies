@@ -8,11 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
-    <PackageReference Include="MongoFramework" Version="0.28.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FileInsurancePolicies.Contracts\FileInsurancePolicies.Contracts.csproj" />
+    <ProjectReference Include="..\FileInsurancePolicies.Domain.Entities\Vehicle.InsurancePolicies.Domain.Entities.csproj" />
   </ItemGroup>
 
 </Project>
