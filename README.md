@@ -1,3 +1,3 @@
-# File Insurance Policies
+# Vehicle Insurance Policies
 
-Create an API to file insurance policies and that allows searches
+Create an API to process vehicle insurance policies and that allows searches
