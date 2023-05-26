@@ -13,8 +13,8 @@ namespace Vehicle.InsurancePolicies.Contracts.Repository
     IEnumerable<TEntity> UpdateRange(IEnumerable<TEntity> entities);
     TEntity Delete(TEntity entity);
     IEnumerable<TEntity> DeleteRange(IEnumerable<TEntity> entities);
-    TEntity Find(params object[] primaryKeys);
-    TEntity Find(Expression<Func<TEntity, bool>> predicate);
+    TEntity? Find(params object[] primaryKeys);
+    TEntity? Find(Expression<Func<TEntity, bool>> predicate);
     bool Exists(Expression<Func<TEntity, bool>> predicate);
     IEnumerable<TEntity> Get(params Expression<Func<TEntity, bool>>[] includes);
     IEnumerable<TEntity> GetByFilter(Expression<Func<TEntity, bool>> filter);
