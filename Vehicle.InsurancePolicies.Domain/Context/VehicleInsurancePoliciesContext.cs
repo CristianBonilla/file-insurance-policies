@@ -60,6 +60,9 @@ namespace Vehicle.InsurancePolicies.Domain.Context
         .ToCollection("Policy")
         .HasKey(key => key.PolicyId)
         .HasIndex(
+          index => index.PolicyNumber,
+          config => config.HasName("PolicyNumberUniqueIndex").IsUnique())
+        .HasIndex(
           index => index.PlanName,
           config => config.HasName("PolicyPlanNameIndex").IsDescending(true));
     }
