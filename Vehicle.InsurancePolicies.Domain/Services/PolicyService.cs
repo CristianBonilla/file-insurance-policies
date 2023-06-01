@@ -11,16 +11,19 @@ namespace Vehicle.InsurancePolicies.Domain.Services
   {
     readonly IVehicleInsurancePoliciesRepositoryContext _context;
     readonly IPolicyRepository _policyRepository;
+    readonly IPolicyTermRepository _policyTermRepository;
     readonly IVehicleRepository _vehicleRepository;
 
     public PolicyService(
       IVehicleInsurancePoliciesRepositoryContext context,
       IPolicyRepository policyRepository,
-      IVehicleRepository vehicleRepository)
+      IVehicleRepository vehicleRepository,
+      IPolicyTermRepository policyTermRepository)
     {
       _context = context;
       _policyRepository = policyRepository;
       _vehicleRepository = vehicleRepository;
+      _policyTermRepository = policyTermRepository;
     }
 
     public async Task AddPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate)
@@ -35,6 +38,13 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       if (currentDateValid < 0)
         throw new ServiceErrorException(HttpStatusCode.BadRequest, "The policy cannot be created if it is not current");
       _policyRepository.Create(policy);
+      PolicyTermEntity policyTerm = new()
+      {
+        PolicyId = policy.PolicyId,
+        StartDate = startDate,
+        EndDate = endDate
+      };
+      _policyTermRepository.Create(policyTerm);
       await _context.SaveAsync();
     }
 
