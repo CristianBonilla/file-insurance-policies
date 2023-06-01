@@ -2,11 +2,11 @@ namespace Vehicle.InsurancePolicies.Domain.Entities
 {
   public class CustomerEntity
   {
-    public Guid CustomerId { get; set; }
-    public string? CustomerName { get; set; }
+    public string CustomerId { get; set; } = string.Empty;
+    public string CustomerName { get; set; } = string.Empty;
     public long DocumentNumber { get; set; }
     public DateTime BirthDate { get; set; }
-    public string? City { get; set; }
-    public string? Address { get; set; }
+    public string City { get; set; } = string.Empty;
+    public string Address { get; set; } = string.Empty;
   }
 }

@@ -2,9 +2,9 @@ namespace Vehicle.InsurancePolicies.Domain.Entities
 {
   public class VehicleEntity
   {
-    public Guid VehicleId { get; set; }
-    public string? Plate { get; set; }
-    public string? Model { get; set; }
+    public string VehicleId { get; set; } = string.Empty;
+    public string Plate { get; set; } = string.Empty;
+    public string Model { get; set; } = string.Empty;
     public bool HasInspection { get; set; }
   }
 }

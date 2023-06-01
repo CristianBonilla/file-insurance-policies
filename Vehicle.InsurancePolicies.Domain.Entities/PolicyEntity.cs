@@ -2,10 +2,10 @@ namespace Vehicle.InsurancePolicies.Domain.Entities
 {
   public class PolicyEntity
   {
-    public Guid PolicyId { get; set; }
-    public Guid CustomerId { get; set; }
-    public Guid VehicleId { get; set; }
-    public string? PlanName { get; set; }
+    public string PolicyId { get; set; } = string.Empty;
+    public string CustomerId { get; set; } = string.Empty;
+    public string VehicleId { get; set; } = string.Empty;
+    public string PlanName { get; set; } = string.Empty;
     public decimal MaxValueCovered { get; set; }
     public DateTime WasTaken { get; set; }
     public CustomerEntity? Customer { get; set; }
