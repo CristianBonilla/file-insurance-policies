@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MongoFramework;
-using Vehicle.InsurancePolicies.Contracts.Mongo;
+using Vehicle.InsurancePolicies.Contracts.MongoRepository;
 
-namespace Vehicle.InsurancePolicies.Infrastructure.Mongo
+namespace Vehicle.InsurancePolicies.Infrastructure.MongoRepository
 {
   public class Repository<TContext, TEntity> : IRepository<TContext, TEntity>
     where TContext : MongoDbContext

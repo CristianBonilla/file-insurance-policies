@@ -1,6 +1,6 @@
 using MongoFramework;
 
-namespace Vehicle.InsurancePolicies.Contracts.Mongo
+namespace Vehicle.InsurancePolicies.Contracts.MongoRepository
 {
   public interface IRepositoryContext<in TContext> : IDisposable where TContext : MongoDbContext
   {

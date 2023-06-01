@@ -1,7 +1,7 @@
 using MongoFramework;
-using Vehicle.InsurancePolicies.Contracts.Mongo;
+using Vehicle.InsurancePolicies.Contracts.MongoRepository;
 
-namespace Vehicle.InsurancePolicies.Infrastructure.Mongo
+namespace Vehicle.InsurancePolicies.Infrastructure.MongoRepository
 {
   public class RepositoryContext<TContext> : IRepositoryContext<TContext> where TContext : MongoDbContext
   {

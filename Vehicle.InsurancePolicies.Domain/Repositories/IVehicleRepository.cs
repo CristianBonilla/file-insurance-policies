@@ -1,4 +1,4 @@
-using Vehicle.InsurancePolicies.Contracts.Mongo;
+using Vehicle.InsurancePolicies.Contracts.MongoRepository;
 using Vehicle.InsurancePolicies.Domain.Context;
 using Vehicle.InsurancePolicies.Domain.Entities;
 

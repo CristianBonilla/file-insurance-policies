@@ -1,4 +1,4 @@
-using Vehicle.InsurancePolicies.Infrastructure.Mongo;
+using Vehicle.InsurancePolicies.Infrastructure.MongoRepository;
 
 namespace Vehicle.InsurancePolicies.Domain.Context
 {

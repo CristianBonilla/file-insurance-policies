@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using MongoFramework;
 
-namespace Vehicle.InsurancePolicies.Contracts.Mongo
+namespace Vehicle.InsurancePolicies.Contracts.MongoRepository
 {
   public interface IRepository<in TContext, TEntity>
     where TContext : MongoDbContext
