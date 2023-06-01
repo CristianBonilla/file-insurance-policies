@@ -14,6 +14,7 @@ namespace Vehicle.InsurancePolicies.Domain.Context
       CoverageConfig(mappingBuilder.Entity<CoverageEntity>());
       VehicleConfig(mappingBuilder.Entity<VehicleEntity>());
       PolicyConfig(mappingBuilder.Entity<PolicyEntity>());
+      PolicyTermConfig(mappingBuilder.Entity<PolicyTermEntity>());
     }
 
     private static void CustomerConfig(EntityDefinitionBuilder<CustomerEntity> builder)
@@ -65,6 +66,13 @@ namespace Vehicle.InsurancePolicies.Domain.Context
         .HasIndex(
           index => index.PlanName,
           config => config.HasName("PolicyPlanNameIndex").IsDescending(true));
+    }
+
+    private static void PolicyTermConfig(EntityDefinitionBuilder<PolicyTermEntity> builder)
+    {
+      builder
+        .ToCollection("PolicyTerm")
+        .HasKey(key => key.PolicyTermId);
     }
   }
 }
