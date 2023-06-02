@@ -10,33 +10,32 @@ namespace Vehicle.InsurancePolicies.Domain.Services
   public class PolicyService : IPolicyService
   {
     readonly IVehicleInsurancePoliciesRepositoryContext _context;
+    readonly IVehicleRepository _vehicleRepository;
+    readonly ICustomerRepository _customerRepository;
+    readonly ICoverageRepository _coverageRepository;
     readonly IPolicyRepository _policyRepository;
     readonly IPolicyTermRepository _policyTermRepository;
-    readonly IVehicleRepository _vehicleRepository;
 
     public PolicyService(
       IVehicleInsurancePoliciesRepositoryContext context,
-      IPolicyRepository policyRepository,
       IVehicleRepository vehicleRepository,
+      ICustomerRepository customerRepository,
+      ICoverageRepository coverageRepository,
+      IPolicyRepository policyRepository,
       IPolicyTermRepository policyTermRepository)
     {
       _context = context;
-      _policyRepository = policyRepository;
       _vehicleRepository = vehicleRepository;
+      _customerRepository = customerRepository;
+      _coverageRepository = coverageRepository;
+      _policyRepository = policyRepository;
       _policyTermRepository = policyTermRepository;
     }
 
     public async Task AddPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate)
     {
-      int takenDateValid = DateTime.Compare(policy.TakenDate, startDate);
-      if (takenDateValid < 0)
-        throw new ServiceErrorException(HttpStatusCode.BadRequest, "The start date cannot be earlier than the end date");
-      int startDateValid = DateTime.Compare(startDate, endDate);
-      if (startDateValid >= 0)
-        throw new ServiceErrorException(HttpStatusCode.BadRequest, "The end date must be after the start date");
-      int currentDateValid = DateTime.Compare(DateTime.Now, endDate);
-      if (currentDateValid < 0)
-        throw new ServiceErrorException(HttpStatusCode.BadRequest, "The policy cannot be created if it is not current");
+      CheckPolicy(policy, startDate, endDate);
+      policy.PolicyNumber = Guid.NewGuid();
       _policyRepository.Create(policy);
       PolicyTermEntity policyTerm = new()
       {
@@ -62,6 +61,48 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       PolicyEntity? policy = _policyRepository.Find(policy => policy.VehicleId == vehicle.VehicleId);
 
       return policy ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Policy not found with vehicle identifier \"{vehicle.VehicleId}\"");
+    }
+
+    private void CheckPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate)
+    {
+      CustomerExists(policy.CustomerId);
+      VehicleExists(policy.VehicleId);
+      ValidatePolicyDates(policy.TakenDate, startDate, endDate);
+      CoverageExists(policy.Coverages);
+
+      void CustomerExists(string customerId)
+      {
+        bool customerExists = _customerRepository.Exists(customer => customer.CustomerId == customerId);
+        if (!customerExists)
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The client with the id \"{customerId}\" does not exist");
+      }
+
+      void VehicleExists(string vehicleId)
+      {
+        bool vehicleExists = _vehicleRepository.Exists(vehicle => vehicle.VehicleId == vehicleId);
+        if (!vehicleExists)
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The vehicle with the id \"{vehicleId}\" does not exist");
+      }
+
+      static void ValidatePolicyDates(DateTime takenDate, DateTime startDate, DateTime endDate)
+      {
+        int takenDateValid = DateTime.Compare(takenDate, startDate);
+        if (takenDateValid < 0)
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, "The start date cannot be earlier than the end date");
+        int startDateValid = DateTime.Compare(startDate, endDate);
+        if (startDateValid >= 0)
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, "The end date must be after the start date");
+        int currentDateValid = DateTime.Compare(DateTime.Now, endDate);
+        if (currentDateValid < 0)
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, "The policy cannot be created if it is not current");
+      }
+
+      void CoverageExists(IEnumerable<string> coverageIDs)
+      {
+        var nonExistent = coverageIDs.Where(coverageId => !_coverageRepository.Exists(coverage => coverage.CoverageId == coverageId));
+        if (nonExistent.Any())
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"There are non-existent coverages: {string.Join(", ", nonExistent)}");
+      }
     }
   }
 }

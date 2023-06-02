@@ -11,6 +11,6 @@ namespace Vehicle.InsurancePolicies.Domain.Entities
     public DateTime TakenDate { get; set; }
     public CustomerEntity? Customer { get; set; }
     public VehicleEntity? Vehicle { get; set; }
-    public ICollection<CoverageEntity> Coverages { get; set; } = new HashSet<CoverageEntity>();
+    public ICollection<string> Coverages { get; set; } = new HashSet<string>();
   }
 }
