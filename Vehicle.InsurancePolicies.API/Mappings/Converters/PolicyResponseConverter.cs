@@ -5,33 +5,25 @@ using Vehicle.InsurancePolicies.Contracts.DTO.Policy;
 using Vehicle.InsurancePolicies.Contracts.DTO.PolicyTerm;
 using Vehicle.InsurancePolicies.Contracts.DTO.Vehicle;
 using Vehicle.InsurancePolicies.Domain.Entities;
+using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 
 namespace Vehicle.InsurancePolicies.API.Mappings.Converters
 {
-  public class PolicyResponseConverter : ITypeConverter<(
-    PolicyEntity policy,
-    CustomerEntity customer,
-    VehicleEntity vehicle,
-    ICollection<CoverageEntity> coverages,
-    PolicyTermEntity policyTerm), PolicyResponse>
+  public class PolicyResponseConverter : ITypeConverter<PolicyTransfer, PolicyResponse>
   {
-    public PolicyResponse Convert((
-      PolicyEntity policy,
-      CustomerEntity customer,
-      VehicleEntity vehicle,
-      ICollection<CoverageEntity> coverages,
-      PolicyTermEntity policyTerm) source,
+    public PolicyResponse Convert(
+      PolicyTransfer source,
       PolicyResponse destination,
       ResolutionContext context)
     {
       IRuntimeMapper mapper = context.Mapper;
-      CustomerResponse customer = mapper.Map<CustomerResponse>(source.customer);
-      VehicleResponse vehicle = mapper.Map<VehicleResponse>(source.vehicle);
-      ICollection<CoverageResponse> coverages = source.coverages
+      CustomerResponse customer = mapper.Map<CustomerResponse>(source.Customer);
+      VehicleResponse vehicle = mapper.Map<VehicleResponse>(source.Vehicle);
+      ICollection<CoverageResponse> coverages = source.Coverages
         .Select(coverage => mapper.Map<CoverageResponse>(coverage))
         .ToArray();
-      PolicyTermResponse policyTerm = mapper.Map<PolicyTermResponse>(source.policyTerm);
-      PolicyEntity policy = source.policy;
+      PolicyTermResponse policyTerm = mapper.Map<PolicyTermResponse>(source.PolicyTerm);
+      PolicyEntity policy = source.Policy;
       destination = new()
       {
         PolicyId = policy.PolicyId,

@@ -6,6 +6,7 @@ using Vehicle.InsurancePolicies.Contracts.DTO.Policy;
 using Vehicle.InsurancePolicies.Contracts.DTO.PolicyTerm;
 using Vehicle.InsurancePolicies.Contracts.DTO.Vehicle;
 using Vehicle.InsurancePolicies.Domain.Entities;
+using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 
 namespace Vehicle.InsurancePolicies.API.Mappings
 {
@@ -23,12 +24,7 @@ namespace Vehicle.InsurancePolicies.API.Mappings
         .ReverseMap()
         .ForMember(member => member.StartDate, options => options.Ignore())
         .ForMember(member => member.EndDate, options => options.Ignore());
-      CreateMap<(
-        PolicyEntity,
-        CustomerEntity,
-        VehicleEntity,
-        ICollection<CoverageEntity>,
-        PolicyTermEntity), PolicyResponse>()
+      CreateMap<PolicyTransfer, PolicyResponse>()
         .ConvertUsing<PolicyResponseConverter>();
     }
   }
