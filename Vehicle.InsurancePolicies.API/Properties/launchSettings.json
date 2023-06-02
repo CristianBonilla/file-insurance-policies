@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "FileInsurancePolicies.API": {
+    "Vehicle.Insurance.Policies.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
