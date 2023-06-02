@@ -1,11 +1,12 @@
 using Vehicle.InsurancePolicies.Domain.Entities;
+using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 
 namespace Vehicle.InsurancePolicies.Contracts.Services
 {
   public interface IPolicyService
   {
     Task AddPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate);
-    PolicyEntity? FindPolicyByNumber(Guid policyNumber);
-    PolicyEntity? FindPolicyByPlateVehicle(string? plate);
+    PolicyTransfer FindPolicyByNumber(Guid policyNumber);
+    PolicyTransfer FindPolicyByPlateVehicle(string? plate);
   }
 }

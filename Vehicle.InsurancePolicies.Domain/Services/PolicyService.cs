@@ -3,6 +3,7 @@ using Vehicle.InsurancePolicies.Contracts.Exceptions;
 using Vehicle.InsurancePolicies.Contracts.Services;
 using Vehicle.InsurancePolicies.Domain.Context;
 using Vehicle.InsurancePolicies.Domain.Entities;
+using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 using Vehicle.InsurancePolicies.Domain.Repositories;
 
 namespace Vehicle.InsurancePolicies.Domain.Services
@@ -47,20 +48,22 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       await _context.SaveAsync();
     }
 
-    public PolicyEntity? FindPolicyByNumber(Guid policyNumber)
+    public PolicyTransfer FindPolicyByNumber(Guid policyNumber)
     {
-      PolicyEntity? policy = _policyRepository.Find(policy => policy.PolicyNumber == policyNumber);
+      PolicyEntity? policy = _policyRepository.Find(policy => policy.PolicyNumber == policyNumber)
+        ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Policy not found with policy number \"{policyNumber}\"");
 
-      return policy ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Policy not found with policy number \"{policyNumber}\"");
+      return GetPolicyTransfer(policy);
     }
 
-    public PolicyEntity? FindPolicyByPlateVehicle(string? plate)
+    public PolicyTransfer FindPolicyByPlateVehicle(string? plate)
     {
       VehicleEntity? vehicle = _vehicleRepository.Find(vehicle => vehicle.Plate == plate)
         ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Vehicle not found with plate \"{plate}\"");
-      PolicyEntity? policy = _policyRepository.Find(policy => policy.VehicleId == vehicle.VehicleId);
+      PolicyEntity? policy = _policyRepository.Find(policy => policy.VehicleId == vehicle.VehicleId)
+        ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Policy not found with vehicle identifier \"{vehicle.VehicleId}\"");
 
-      return policy ?? throw new ServiceErrorException(HttpStatusCode.NotFound, $"Policy not found with vehicle identifier \"{vehicle.VehicleId}\"");
+      return GetPolicyTransfer(policy);
     }
 
     private void CheckPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate)
@@ -103,6 +106,24 @@ namespace Vehicle.InsurancePolicies.Domain.Services
         if (nonExistent.Any())
           throw new ServiceErrorException(HttpStatusCode.BadRequest, $"There are non-existent coverages: {string.Join(", ", nonExistent)}");
       }
+    }
+
+    private PolicyTransfer GetPolicyTransfer(PolicyEntity policy)
+    {
+      CustomerEntity customer = _customerRepository.Find(policy.CustomerId)!;
+      VehicleEntity vehicle = _vehicleRepository.Find(policy.VehicleId)!;
+      var coverages = policy.Coverages.Select(coverageID => _coverageRepository.Find(coverageID)!)
+        .ToArray();
+      PolicyTermEntity policyTerm = _policyTermRepository.Find(policyTerm => policyTerm.PolicyId == policy.PolicyId)!;
+
+      return new()
+      {
+        Policy = policy,
+        Customer = customer,
+        Vehicle = vehicle,
+        Coverages = coverages,
+        PolicyTerm = policyTerm
+      };
     }
   }
 }
