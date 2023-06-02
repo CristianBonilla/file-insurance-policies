@@ -1,5 +1,6 @@
 using Autofac;
 using Vehicle.InsurancePolicies.API.Extensions;
+using Vehicle.InsurancePolicies.API.Modules;
 using Vehicle.InsurancePolicies.API.Options;
 
 namespace Vehicle.InsurancePolicies.API
@@ -22,9 +23,9 @@ namespace Vehicle.InsurancePolicies.API
     }
 
     // Register your own things directly with Autofac here.
-    public void ConfigureContainer(ContainerBuilder _)
+    public void ConfigureContainer(ContainerBuilder builder)
     {
-      
+      builder.RegisterModule<MongoDomainModule>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
