@@ -1,10 +1,12 @@
+using MongoDB.Bson;
+
 namespace Vehicle.InsurancePolicies.Domain.Entities
 {
   public class VehicleEntity
   {
-    public string VehicleId { get; set; } = string.Empty;
-    public string Plate { get; set; } = string.Empty;
-    public string Model { get; set; } = string.Empty;
+    public ObjectId VehicleId { get; set; }
+    public string Plate { get; set; } = null!;
+    public string Model { get; set; } = null!;
     public bool HasInspection { get; set; }
   }
 }

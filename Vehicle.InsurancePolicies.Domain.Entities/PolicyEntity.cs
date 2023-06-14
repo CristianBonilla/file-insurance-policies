@@ -1,14 +1,16 @@
+using MongoDB.Bson;
+
 namespace Vehicle.InsurancePolicies.Domain.Entities
 {
   public class PolicyEntity
   {
-    public string PolicyId { get; set; } = string.Empty;
+    public ObjectId PolicyId { get; set; }
     public Guid PolicyNumber { get; set; }
-    public string CustomerId { get; set; } = string.Empty;
-    public string VehicleId { get; set; } = string.Empty;
-    public string PlanName { get; set; } = string.Empty;
+    public ObjectId CustomerId { get; set; }
+    public ObjectId VehicleId { get; set; }
+    public string PlanName { get; set; } = null!;
     public decimal MaxValueCovered { get; set; }
     public DateTime TakenDate { get; set; }
-    public ICollection<string> Coverages { get; set; } = new HashSet<string>();
+    public ICollection<ObjectId> Coverages { get; set; } = new HashSet<ObjectId>();
   }
 }
