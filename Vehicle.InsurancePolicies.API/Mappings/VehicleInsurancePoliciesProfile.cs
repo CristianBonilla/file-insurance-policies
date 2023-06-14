@@ -1,4 +1,5 @@
 using AutoMapper;
+using MongoDB.Bson;
 using Vehicle.InsurancePolicies.API.Mappings.Converters;
 using Vehicle.InsurancePolicies.Contracts.DTO.Coverage;
 using Vehicle.InsurancePolicies.Contracts.DTO.Customer;
@@ -14,16 +15,19 @@ namespace Vehicle.InsurancePolicies.API.Mappings
   {
     public VehicleInsurancePoliciesProfile()
     {
-      CreateMap<CustomerEntity, CustomerResponse>();
-      CreateMap<VehicleEntity, VehicleResponse>();
-      CreateMap<CoverageEntity, CoverageResponse>();
-      CreateMap<PolicyTermEntity, PolicyTermResponse>();
-      CreateMap<PolicyRequest, PolicyEntity>()
-        .ForMember(member => member.PolicyId, options => options.Ignore())
-        .ForMember(member => member.PolicyNumber, options => options.Ignore())
-        .ReverseMap()
+      CreateMap<CustomerEntity, CustomerResponse>()
+        .ForMember(member => member.CustomerId, options => options.MapFrom(map => map.CustomerId.ToString()));
+      CreateMap<VehicleEntity, VehicleResponse>()
+        .ForMember(member => member.VehicleId, options => options.MapFrom(map => map.VehicleId.ToString()));
+      CreateMap<CoverageEntity, CoverageResponse>()
+        .ForMember(member => member.CoverageId, options => options.MapFrom(map => map.CoverageId.ToString()));
+      CreateMap<PolicyTermEntity, PolicyTermResponse>()
+        .ForMember(member => member.PolicyTermId, options => options.MapFrom(map => map.PolicyTermId.ToString()));
+      CreateMap<PolicyEntity, PolicyRequest>()
         .ForMember(member => member.StartDate, options => options.Ignore())
-        .ForMember(member => member.EndDate, options => options.Ignore());
+        .ForMember(member => member.EndDate, options => options.Ignore())
+        .ReverseMap()
+        .ConvertUsing<PolicyEntityConverter>();
       CreateMap<PolicyTransfer, PolicyResponse>()
         .ConvertUsing<PolicyResponseConverter>();
     }

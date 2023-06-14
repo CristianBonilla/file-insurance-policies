@@ -9,12 +9,9 @@ using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 
 namespace Vehicle.InsurancePolicies.API.Mappings.Converters
 {
-  public class PolicyResponseConverter : ITypeConverter<PolicyTransfer, PolicyResponse>
+  class PolicyResponseConverter : ITypeConverter<PolicyTransfer, PolicyResponse>
   {
-    public PolicyResponse Convert(
-      PolicyTransfer source,
-      PolicyResponse destination,
-      ResolutionContext context)
+    public PolicyResponse Convert(PolicyTransfer source, PolicyResponse destination, ResolutionContext context)
     {
       IRuntimeMapper mapper = context.Mapper;
       CustomerResponse customer = mapper.Map<CustomerResponse>(source.Customer);
@@ -26,10 +23,10 @@ namespace Vehicle.InsurancePolicies.API.Mappings.Converters
       PolicyEntity policy = source.Policy;
       destination = new()
       {
-        PolicyId = policy.PolicyId,
+        PolicyId = policy.PolicyId.ToString(),
         PolicyNumber = policy.PolicyNumber,
-        CustomerId = policy.CustomerId,
-        VehicleId = policy.VehicleId,
+        CustomerId = policy.CustomerId.ToString(),
+        VehicleId = policy.VehicleId.ToString(),
         PlanName = policy.PlanName,
         MaxValueCovered = policy.MaxValueCovered,
         TakenDate = policy.TakenDate,
