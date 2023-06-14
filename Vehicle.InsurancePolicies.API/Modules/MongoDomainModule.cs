@@ -23,6 +23,12 @@ namespace Vehicle.InsurancePolicies.API.Modules
         .As<IVehicleInsurancePoliciesRepositoryContext>()
         .InstancePerLifetimeScope();
 
+      builder.RegisterType<CustomerRepository>()
+        .As<ICustomerRepository>()
+        .InstancePerLifetimeScope();
+      builder.RegisterType<CoverageRepository>()
+        .As<ICoverageRepository>()
+        .InstancePerLifetimeScope();
       builder.RegisterType<PolicyRepository>()
         .As<IPolicyRepository>()
         .InstancePerLifetimeScope();
