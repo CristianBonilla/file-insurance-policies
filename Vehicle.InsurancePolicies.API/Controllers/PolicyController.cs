@@ -27,12 +27,11 @@ namespace Vehicle.InsurancePolicies.API.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddPolicy([FromBody] PolicyRequest policyRequest)
     {
-      string methodName = nameof(AddPolicy);
       PolicyEntity policy = _mapper.Map<PolicyEntity>(policyRequest);
       PolicyTransfer policyTransfer = await _service.AddPolicy(policy, policyRequest.StartDate, policyRequest.EndDate);
       PolicyResponse policyResponse = _mapper.Map<PolicyResponse>(policyTransfer);
 
-      return CreatedAtAction(methodName, policyResponse);
+      return CreatedAtAction(nameof(AddPolicy), policyResponse);
     }
   }
 }
