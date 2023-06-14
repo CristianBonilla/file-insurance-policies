@@ -20,9 +20,9 @@ namespace Vehicle.InsurancePolicies.Infrastructure.MongoRepository
       _context.AttachRange(entities);
     }
 
-    public MongoDbSet<TEntity> Set<TEntity>() where TEntity : class
+    public IMongoDbSet<TEntity> Set<TEntity>() where TEntity : class
     {
-      return (MongoDbSet<TEntity>)_context.Set<TEntity>();
+      return _context.Set<TEntity>();
     }
 
     public IQueryable<TEntity> Query<TEntity>() where TEntity : class

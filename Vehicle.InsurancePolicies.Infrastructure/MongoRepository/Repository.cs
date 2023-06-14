@@ -10,7 +10,7 @@ namespace Vehicle.InsurancePolicies.Infrastructure.MongoRepository
     where TEntity : class
   {
     readonly IRepositoryContext<TContext> _context;
-    readonly MongoDbSet<TEntity> _entitySet;
+    readonly IMongoDbSet<TEntity> _entitySet;
     readonly IQueryable<TEntity> _query;
 
     public Repository(IRepositoryContext<TContext> context)
@@ -57,7 +57,7 @@ namespace Vehicle.InsurancePolicies.Infrastructure.MongoRepository
     public IEnumerable<TEntity> Get(params Expression<Func<TEntity, bool>>[] includes)
     {
       if (!includes.Any())
-        return _entitySet.ToList();
+        return _query.ToList();
       var query = _query;
       foreach (var expression in includes)
         query = query.Include(expression);
