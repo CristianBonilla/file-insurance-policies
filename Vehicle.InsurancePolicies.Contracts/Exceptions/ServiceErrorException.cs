@@ -5,14 +5,8 @@ namespace Vehicle.InsurancePolicies.Contracts.Exceptions
 {
   public class ServiceErrorException : Exception
   {
-    public HttpStatusCode Status { get; }
+    public ServiceError ServiceError { get; }
 
-    public ServiceError Errors { get; }
-
-    public ServiceErrorException(HttpStatusCode status, params string[] errors)
-    {
-      Status = status;
-      Errors = new() { Errors = new HashSet<string>(errors) };
-    }
+    public ServiceErrorException(HttpStatusCode status, params string[] errors) => ServiceError = new(status, errors);
   }
 }

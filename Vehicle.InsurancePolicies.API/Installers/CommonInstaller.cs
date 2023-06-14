@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using Vehicle.InsurancePolicies.API.Filters;
 
 namespace Vehicle.InsurancePolicies.API.Installers
 {
@@ -9,8 +10,10 @@ namespace Vehicle.InsurancePolicies.API.Installers
   {
     public void InstallServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-      services.AddControllers()
-        .AddNewtonsoftJson(JsonSerializer);
+      services.AddControllers(options =>
+      {
+        options.Filters.Add<ServiceErrorExceptionFilter>();
+      }).AddNewtonsoftJson(JsonSerializer);
       services.AddApiVersioning(options =>
       {
         options.DefaultApiVersion = new ApiVersion(1, 0);
