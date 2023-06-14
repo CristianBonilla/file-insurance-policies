@@ -23,15 +23,16 @@ namespace Vehicle.InsurancePolicies.API.Controllers
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PolicyResponse))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PolicyResponse))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddPolicy([FromBody] PolicyRequest policyRequest)
     {
+      string methodName = nameof(AddPolicy);
       PolicyEntity policy = _mapper.Map<PolicyEntity>(policyRequest);
       PolicyTransfer policyTransfer = await _service.AddPolicy(policy, policyRequest.StartDate, policyRequest.EndDate);
       PolicyResponse policyResponse = _mapper.Map<PolicyResponse>(policyTransfer);
 
-      return Ok(policyResponse);
+      return CreatedAtAction(methodName, policyResponse);
     }
   }
 }
