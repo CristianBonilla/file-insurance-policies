@@ -4,7 +4,9 @@ using Vehicle.InsurancePolicies.Contracts.Exceptions;
 using Vehicle.InsurancePolicies.Contracts.Services;
 using Vehicle.InsurancePolicies.Domain.Context;
 using Vehicle.InsurancePolicies.Domain.Entities;
+using Vehicle.InsurancePolicies.Domain.Entities.SourceValues;
 using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
+using Vehicle.InsurancePolicies.Domain.Extensions;
 using Vehicle.InsurancePolicies.Domain.Repositories;
 
 namespace Vehicle.InsurancePolicies.Domain.Services
@@ -72,6 +74,7 @@ namespace Vehicle.InsurancePolicies.Domain.Services
 
     private void CheckPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate)
     {
+      PolicySourceValues sourceValues = policy.GetSourceValues();
       CustomerExists(policy.CustomerId);
       VehicleExists(policy.VehicleId);
       ValidatePolicyDates(policy.TakenDate, startDate, endDate);
@@ -81,14 +84,14 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       {
         bool customerExists = _customerRepository.Exists(customer => customer.CustomerId == customerId);
         if (!customerExists)
-          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The client with the id \"{customerId}\" does not exist");
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The client with the id \"{sourceValues.CustomerId}\" does not exist");
       }
 
       void VehicleExists(ObjectId vehicleId)
       {
         bool vehicleExists = _vehicleRepository.Exists(vehicle => vehicle.VehicleId == vehicleId);
         if (!vehicleExists)
-          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The vehicle with the id \"{vehicleId}\" does not exist");
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The vehicle with the id \"{sourceValues.VehicleId}\" does not exist");
       }
 
       static void ValidatePolicyDates(DateTime takenDate, DateTime startDate, DateTime endDate)
