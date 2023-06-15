@@ -17,7 +17,7 @@ namespace Vehicle.InsurancePolicies.API.Mappings.Converters
       CustomerResponse customer = mapper.Map<CustomerResponse>(source.Customer);
       VehicleResponse vehicle = mapper.Map<VehicleResponse>(source.Vehicle);
       ICollection<CoverageResponse> coverages = source.Coverages
-        .Select(coverage => mapper.Map<CoverageResponse>(coverage))
+        .Select(mapper.Map<CoverageResponse>)
         .ToArray();
       PolicyTermResponse policyTerm = mapper.Map<PolicyTermResponse>(source.PolicyTerm);
       PolicyEntity policy = source.Policy;
