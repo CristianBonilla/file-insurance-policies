@@ -78,7 +78,7 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       CustomerExists(policy.CustomerId);
       VehicleExists(policy.VehicleId);
       ValidatePolicyDates(policy.TakenDate, startDate, endDate);
-      CoverageExists(policy.Coverages);
+      CoverageExists(policy.Coverages.Zip(sourceValues.Coverages));
 
       void CustomerExists(ObjectId customerId)
       {
@@ -107,9 +107,10 @@ namespace Vehicle.InsurancePolicies.Domain.Services
           throw new ServiceErrorException(HttpStatusCode.BadRequest, "The policy cannot be created if it is not current");
       }
 
-      void CoverageExists(IEnumerable<ObjectId> coverageIDs)
+      void CoverageExists(IEnumerable<(ObjectId, string)> coverageIds)
       {
-        var nonExistent = coverageIDs.Where(coverageId => !_coverageRepository.Exists(coverage => coverage.CoverageId == coverageId));
+        var nonExistent = coverageIds.Where(coverageId => !_coverageRepository.Exists(coverage => coverage.CoverageId == coverageId.Item1))
+          .Select(coverageId => coverageId.Item2);
         if (nonExistent.Any())
           throw new ServiceErrorException(HttpStatusCode.BadRequest, $"There are non-existent coverages: {string.Join(", ", nonExistent)}");
       }
