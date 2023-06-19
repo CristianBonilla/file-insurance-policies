@@ -24,29 +24,13 @@ namespace Vehicle.InsurancePolicies.Infrastructure.MongoRepository
 
     public void CreateRange(IEnumerable<TEntity> entities) => _entitySet.AddRange(entities);
 
-    public void Update(TEntity entity)
-    {
-      _context.Attach(entity);
-      _entitySet.Update(entity);
-    }
+    public void Update(TEntity entity) => _entitySet.Update(entity);
 
-    public void UpdateRange(IEnumerable<TEntity> entities)
-    {
-      _context.AttachRange(entities);
-      _entitySet.UpdateRange(entities);
-    }
+    public void UpdateRange(IEnumerable<TEntity> entities) => _entitySet.UpdateRange(entities);
 
-    public void Delete(TEntity entity)
-    {
-      _context.Attach(entity);
-      _entitySet.Remove(entity);
-    }
+    public void Delete(TEntity entity) => _entitySet.Remove(entity);
 
-    public void DeleteRange(IEnumerable<TEntity> entities)
-    {
-      _context.AttachRange(entities);
-      _entitySet.RemoveRange(entities);
-    }
+    public void DeleteRange(IEnumerable<TEntity> entities) => _entitySet.RemoveRange(entities);
 
     public TEntity? Find(object id) => _entitySet.Find(id);
 
