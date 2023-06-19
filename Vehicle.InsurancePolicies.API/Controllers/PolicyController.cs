@@ -33,5 +33,39 @@ namespace Vehicle.InsurancePolicies.API.Controllers
 
       return CreatedAtAction(nameof(AddPolicy), policyResponse);
     }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IAsyncEnumerable<PolicyResponse>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IAsyncEnumerable<PolicyResponse> Get()
+    {
+      var policies = _service.GetPolicies();
+
+      return _mapper.Map<IAsyncEnumerable<PolicyResponse>>(policies);
+    }
+
+    [HttpGet("{policyNumber:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PolicyResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetPolicyByNumber(Guid policyNumber)
+    {
+      PolicyTransfer policyTransfer = _service.FindPolicyByNumber(policyNumber);
+      PolicyResponse policyResponse = _mapper.Map<PolicyResponse>(policyTransfer);
+
+      return Ok(policyResponse);
+    }
+
+    [HttpGet("{plate}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PolicyResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetPolicyByPlateVehicle(string? plate)
+    {
+      PolicyTransfer policyTransfer = _service.FindPolicyByPlateVehicle(plate);
+      PolicyResponse policyResponse = _mapper.Map<PolicyResponse>(policyTransfer);
+
+      return Ok(policyResponse);
+    }
   }
 }

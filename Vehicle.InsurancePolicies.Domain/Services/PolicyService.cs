@@ -56,6 +56,13 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       return policyTransfer;
     }
 
+    public async IAsyncEnumerable<PolicyTransfer> GetPolicies()
+    {
+      var policies = _policyRepository.Get().ToAsyncEnumerable();
+      await foreach (PolicyEntity policy in policies)
+        yield return GetPolicyTransfer(policy);
+    }
+
     public PolicyTransfer FindPolicyByNumber(Guid policyNumber)
     {
       PolicyEntity? policy = _policyRepository.Find(policy => policy.PolicyNumber == policyNumber)

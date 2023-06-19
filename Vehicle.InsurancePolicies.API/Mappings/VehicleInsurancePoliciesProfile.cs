@@ -27,6 +27,8 @@ namespace Vehicle.InsurancePolicies.API.Mappings
         .ConvertUsing<PolicyEntityConverter>();
       CreateMap<PolicyTransfer, PolicyResponse>()
         .ConvertUsing<PolicyResponseConverter>();
+      CreateMap<IAsyncEnumerable<PolicyTransfer>, IAsyncEnumerable<PolicyResponse>>()
+        .ConvertUsing<PolicyResponsesAsyncConverter>();
     }
   }
 }
