@@ -1,5 +1,4 @@
 using AutoMapper;
-using MongoDB.Bson;
 using Vehicle.InsurancePolicies.API.Mappings.Converters;
 using Vehicle.InsurancePolicies.Contracts.DTO.Coverage;
 using Vehicle.InsurancePolicies.Contracts.DTO.Customer;
@@ -24,8 +23,6 @@ namespace Vehicle.InsurancePolicies.API.Mappings
       CreateMap<PolicyTermEntity, PolicyTermResponse>()
         .ForMember(member => member.PolicyTermId, options => options.MapFrom(map => map.PolicyTermId.ToString()));
       CreateMap<PolicyEntity, PolicyRequest>()
-        .ForMember(member => member.StartDate, options => options.Ignore())
-        .ForMember(member => member.EndDate, options => options.Ignore())
         .ReverseMap()
         .ConvertUsing<PolicyEntityConverter>();
       CreateMap<PolicyTransfer, PolicyResponse>()

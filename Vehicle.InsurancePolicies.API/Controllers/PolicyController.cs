@@ -28,7 +28,7 @@ namespace Vehicle.InsurancePolicies.API.Controllers
     public async Task<IActionResult> AddPolicy([FromBody] PolicyRequest policyRequest)
     {
       PolicyEntity policy = _mapper.Map<PolicyEntity>(policyRequest);
-      PolicyTransfer policyTransfer = await _service.AddPolicy(policy, policyRequest.StartDate, policyRequest.EndDate);
+      PolicyTransfer policyTransfer = await _service.AddPolicy(policy);
       PolicyResponse policyResponse = _mapper.Map<PolicyResponse>(policyTransfer);
 
       return CreatedAtAction(nameof(AddPolicy), policyResponse);

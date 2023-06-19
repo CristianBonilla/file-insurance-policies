@@ -5,7 +5,7 @@ namespace Vehicle.InsurancePolicies.Contracts.Services
 {
   public interface IPolicyService
   {
-    Task<PolicyTransfer> AddPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate);
+    Task<PolicyTransfer> AddPolicy(PolicyEntity policy);
     PolicyTransfer FindPolicyByNumber(Guid policyNumber);
     PolicyTransfer FindPolicyByPlateVehicle(string? plate);
   }

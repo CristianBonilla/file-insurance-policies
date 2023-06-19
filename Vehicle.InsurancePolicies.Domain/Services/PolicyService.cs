@@ -36,8 +36,10 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       _policyTermRepository = policyTermRepository;
     }
 
-    public async Task<PolicyTransfer> AddPolicy(PolicyEntity policy, DateTime startDate, DateTime endDate)
+    public async Task<PolicyTransfer> AddPolicy(PolicyEntity policy)
     {
+      DateTime startDate = GetDateRandom();
+      DateTime endDate = GetDateRandom();
       CheckPolicy(policy, startDate, endDate);
       _policyRepository.Create(policy);
       PolicyTermEntity policyTerm = new()
@@ -77,7 +79,7 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       PolicySourceValues sourceValues = policy.GetSourceValues();
       CustomerExists(policy.CustomerId);
       VehicleExists(policy.VehicleId);
-      ValidatePolicyDates(policy.TakenDate, startDate, endDate);
+      ValidatePolicyDates(policy.TakenDate);
       CoverageExists(policy.Coverages.Zip(sourceValues.Coverages));
 
       void CustomerExists(ObjectId customerId)
@@ -94,17 +96,17 @@ namespace Vehicle.InsurancePolicies.Domain.Services
           throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The vehicle with the id \"{sourceValues.VehicleId}\" does not exist");
       }
 
-      static void ValidatePolicyDates(DateTime takenDate, DateTime startDate, DateTime endDate)
+      void ValidatePolicyDates(DateTime takenDate)
       {
         int startDateValid = DateTime.Compare(takenDate, startDate);
         if (startDateValid >= 0)
-          throw new ServiceErrorException(HttpStatusCode.BadRequest, "The start date cannot be earlier than the taken date");
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The start date cannot be earlier than the taken date. \"Taken date: {takenDate}\" \"Start date random: {startDate}\"");
         int endDateValid = DateTime.Compare(startDate, endDate);
-        if (endDateValid >= 0)
-          throw new ServiceErrorException(HttpStatusCode.BadRequest, "The end date must be after the start date");
+        if (endDateValid > 0)
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The end date must be after the start date. \"Start date random: {startDate}\". \"End date random: {endDate}\"");
         int currentDateValid = DateTime.Compare(endDate, DateTime.Now);
         if (currentDateValid < 0)
-          throw new ServiceErrorException(HttpStatusCode.BadRequest, "The policy cannot be created if it is not current");
+          throw new ServiceErrorException(HttpStatusCode.BadRequest, $"The policy cannot be created if it is not current. \"End date random: {endDate}\". \"Current date: {DateTime.Now}\"");
       }
 
       void CoverageExists(IEnumerable<(ObjectId, string)> coverageIds)
@@ -132,6 +134,20 @@ namespace Vehicle.InsurancePolicies.Domain.Services
         Coverages = coverages,
         PolicyTerm = policyTerm
       };
+    }
+
+    private static DateTime GetDateRandom(int yearRange = 10)
+    {
+      int middle = yearRange / 2;
+      DateTime start = new(DateTime.Now.Year - middle, 1, 1);
+      DateTime end = DateTime.Now.AddYears(middle);
+      Random random = new();
+      int range = (end - start).Days;
+
+      return start.AddDays(random.Next(range))
+        .AddHours(random.Next(0, 24))
+        .AddMinutes(random.Next(0, 60))
+        .AddSeconds(random.Next(0, 60));
     }
   }
 }
