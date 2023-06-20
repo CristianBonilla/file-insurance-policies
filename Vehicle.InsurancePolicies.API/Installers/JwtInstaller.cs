@@ -17,12 +17,12 @@ namespace Vehicle.InsurancePolicies.API.Installers
       services.AddAuthentication(auth =>
       {
         auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
       })
       .AddJwtBearer(jwt =>
       {
-        jwt.RequireHttpsMetadata = !env.IsDevelopment(); // Development only
+        jwt.RequireHttpsMetadata = !env.IsDevelopment(); // Disabled in dev
         jwt.SaveToken = true;
         jwt.TokenValidationParameters = new()
         {

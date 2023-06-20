@@ -25,6 +25,7 @@ namespace Vehicle.InsurancePolicies.API
     // Register your own things directly with Autofac here.
     public void ConfigureContainer(ContainerBuilder builder)
     {
+      builder.RegisterModule<IdentityModule>();
       builder.RegisterModule<MongoDomainModule>();
     }
 

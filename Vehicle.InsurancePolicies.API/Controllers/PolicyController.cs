@@ -1,4 +1,6 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Vehicle.InsurancePolicies.Contracts.DTO.Policy;
 using Vehicle.InsurancePolicies.Contracts.Services;
@@ -11,6 +13,7 @@ namespace Vehicle.InsurancePolicies.API.Controllers
   [ApiController]
   [ApiVersion("1.0")]
   [Produces("application/json")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class PolicyController : ControllerBase
   {
     readonly IMapper _mapper;

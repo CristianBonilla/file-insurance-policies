@@ -19,6 +19,13 @@ namespace Vehicle.InsurancePolicies.API.Installers
           Description = "Create an API to process vehicle insurance policies and that allows searches",
           Contact = swagger.Contact
         });
+        options.AddSecurityDefinition(CommonValues.Bearer, new()
+        {
+          Description = "JWT Auth Token header using the bearer schema",
+          Name = "JWT Auth Token",
+          In = ParameterLocation.Header,
+          Type = SecuritySchemeType.ApiKey
+        });
         OpenApiSecurityScheme apiSecurity = new()
         {
           Reference = new OpenApiReference
