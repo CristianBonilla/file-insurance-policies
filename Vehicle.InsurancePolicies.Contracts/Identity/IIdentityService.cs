@@ -1,4 +1,4 @@
-using Vehicle.InsurancePolicies.Contracts.Identity.Auth;
+using Vehicle.InsurancePolicies.Contracts.DTO.Auth;
 
 namespace Vehicle.InsurancePolicies.Contracts.Identity
 {

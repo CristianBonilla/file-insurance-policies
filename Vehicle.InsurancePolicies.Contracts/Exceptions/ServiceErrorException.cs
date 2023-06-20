@@ -7,6 +7,9 @@ namespace Vehicle.InsurancePolicies.Contracts.Exceptions
   {
     public ServiceError ServiceError { get; }
 
-    public ServiceErrorException(HttpStatusCode status, params string[] errors) => ServiceError = new(status, errors);
+    public ServiceErrorException(HttpStatusCode status, params string[] errors)
+    {
+      ServiceError = new(status, errors.Where(error => !string.IsNullOrWhiteSpace(error)).ToArray());
+    }
   }
 }

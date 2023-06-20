@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Vehicle.InsurancePolicies.API.Options;
@@ -13,7 +12,7 @@ namespace Vehicle.InsurancePolicies.API.Installers
       services.Configure<JwtOptions>(jwtSection);
       JwtOptions jwtOptions = jwtSection.Get<JwtOptions>();
       services.AddSingleton(jwtOptions);
-      byte[] key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
+      (byte[] key, _) = jwtOptions.GetGeneratedKey();
       services.AddAuthentication(auth =>
       {
         auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

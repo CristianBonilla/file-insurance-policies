@@ -1,4 +1,4 @@
-namespace Vehicle.InsurancePolicies.Contracts.Identity.Auth
+namespace Vehicle.InsurancePolicies.Contracts.DTO.Auth
 {
   public class AuthResponse
   {

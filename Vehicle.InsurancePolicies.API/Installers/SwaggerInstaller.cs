@@ -22,7 +22,7 @@ namespace Vehicle.InsurancePolicies.API.Installers
         options.AddSecurityDefinition(CommonValues.Bearer, new()
         {
           Description = "JWT Auth Token header using the bearer schema",
-          Name = "JWT Auth Token",
+          Name = "Authorization",
           In = ParameterLocation.Header,
           Type = SecuritySchemeType.ApiKey
         });
