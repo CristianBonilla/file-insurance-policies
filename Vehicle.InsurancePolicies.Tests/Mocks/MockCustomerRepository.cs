@@ -34,7 +34,7 @@ namespace Vehicle.InsurancePolicies.Tests.Mocks
 
     public static Mock<ICustomerRepository> GetMock()
     {
-      var mockCustomerRepository = new Mock<ICustomerRepository>();
+      Mock<ICustomerRepository> mockCustomerRepository = new();
       mockCustomerRepository.Setup(expression => expression.Get()).Returns(() => _customers);
       mockCustomerRepository.Setup(expression => expression.Exists(It.IsAny<Expression<Func<CustomerEntity, bool>>>()))
         .Returns<Expression<Func<CustomerEntity, bool>>>(predicate => _customersQuery.Any(predicate));

@@ -36,7 +36,7 @@ namespace Vehicle.InsurancePolicies.Tests.Mocks
 
     public static Mock<ICoverageRepository> GetMock()
     {
-      var mockCoverageRepository = new Mock<ICoverageRepository>();
+      Mock<ICoverageRepository> mockCoverageRepository = new();
       mockCoverageRepository.Setup(expression => expression.Get()).Returns(() => _coverages);
       mockCoverageRepository.Setup(expression => expression.Exists(It.IsAny<Expression<Func<CoverageEntity, bool>>>()))
         .Returns<Expression<Func<CoverageEntity, bool>>>(expression => _coveragesQuery.Any(expression));

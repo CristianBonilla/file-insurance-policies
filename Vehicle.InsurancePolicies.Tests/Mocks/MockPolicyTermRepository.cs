@@ -30,7 +30,7 @@ namespace Vehicle.InsurancePolicies.Tests.Mocks
 
     public static Mock<IPolicyTermRepository> GetMock()
     {
-      var mockPolicyTermRepository = new Mock<IPolicyTermRepository>();
+      Mock<IPolicyTermRepository> mockPolicyTermRepository = new();
       mockPolicyTermRepository.Setup(expression => expression.Get()).Returns(() => _policyTerms);
       mockPolicyTermRepository.Setup(expression => expression.Create(It.IsAny<PolicyTermEntity>()))
         .Callback<PolicyTermEntity>(policyTerm => _policyTerms = _policyTerms.Concat(new[] { policyTerm }));

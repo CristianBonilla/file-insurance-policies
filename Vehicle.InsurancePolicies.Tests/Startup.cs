@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Vehicle.InsurancePolicies.Domain.Context;
 
 namespace Vehicle.InsurancePolicies.Tests
 {
@@ -29,7 +31,11 @@ namespace Vehicle.InsurancePolicies.Tests
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", false, true)
         .Build();
+      Mock<VehicleInsurancePoliciesContext> mockContext = new();
+      Mock<IVehicleInsurancePoliciesRepositoryContext> mockRepositoryContext = new();
       serviceCollection.AddSingleton(configuration);
+      serviceCollection.AddScoped(_ => mockContext.Object);
+      serviceCollection.AddScoped(_ => mockRepositoryContext.Object);
       startup.ServiceCollection = serviceCollection;
 
       return startup;
