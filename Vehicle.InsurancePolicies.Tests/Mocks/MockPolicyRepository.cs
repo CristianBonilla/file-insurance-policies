@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using Moq;
+using System.Linq.Expressions;
 using Vehicle.InsurancePolicies.Domain.Entities;
 using Vehicle.InsurancePolicies.Domain.Repositories;
 
@@ -52,8 +53,8 @@ namespace Vehicle.InsurancePolicies.Tests.Mocks
       mockPolicyRepository.Setup(expression => expression.Get()).Returns(() => _policies);
       mockPolicyRepository.Setup(expression => expression.Create(It.IsAny<PolicyEntity>()))
         .Callback<PolicyEntity>(policy => _policies = _policies.Concat(new[] { policy }));
-      mockPolicyRepository.Setup(expression => expression.Find(It.IsAny<ObjectId>()))
-        .Returns<ObjectId>(policyId => _policiesQuery.FirstOrDefault(policy => policy.PolicyId == policyId));
+      mockPolicyRepository.Setup(expression => expression.Find(It.IsAny<Expression<Func<PolicyEntity, bool>>>()))
+        .Returns<Expression<Func<PolicyEntity, bool>>>(expression => _policiesQuery.FirstOrDefault(expression));
 
       return mockPolicyRepository;
     }
