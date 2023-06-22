@@ -33,8 +33,10 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
     }
 
     [Test]
-    public void Should_Add()
+    public async Task Should_Add_Policy_Correctly()
     {
+      // Arrange
+
     }
   }
 }

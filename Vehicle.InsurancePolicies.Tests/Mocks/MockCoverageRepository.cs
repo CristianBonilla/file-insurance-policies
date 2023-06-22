@@ -3,35 +3,13 @@ using Moq;
 using System.Linq.Expressions;
 using Vehicle.InsurancePolicies.Domain.Entities;
 using Vehicle.InsurancePolicies.Domain.Repositories;
+using Vehicle.InsurancePolicies.Tests.Commands;
 
 namespace Vehicle.InsurancePolicies.Tests.Mocks
 {
   class MockCoverageRepository
   {
-    static IEnumerable<CoverageEntity> _coverages = new CoverageEntity[]
-    {
-      new()
-      {
-        CoverageId = new ObjectId("647825872c728e9a99746436"),
-        CoverageName = "Responsabilidad civil bienes y personas"
-      },
-      new()
-      {
-        CoverageId = new ObjectId("647825872c728e9a99746437"),
-        CoverageName = "Responsabilidad civil catastrófica"
-      },
-      new()
-      {
-        CoverageId = new ObjectId("647825872c728e9a99746438"),
-        CoverageName = "Robo total"
-      },
-      new()
-      {
-        CoverageId = new ObjectId("647825872c728e9a99746439"),
-        CoverageName = "Daños materiales"
-      }
-    };
-
+    static readonly IEnumerable<CoverageEntity> _coverages = FakeCoverageCommand.Coverages;
     static readonly IQueryable<CoverageEntity> _coveragesQuery = _coverages.AsQueryable();
 
     public static Mock<ICoverageRepository> GetMock()

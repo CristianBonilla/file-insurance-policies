@@ -3,36 +3,13 @@ using MongoDB.Bson;
 using Moq;
 using Vehicle.InsurancePolicies.Domain.Entities;
 using Vehicle.InsurancePolicies.Domain.Repositories;
+using Vehicle.InsurancePolicies.Tests.Commands;
 
 namespace Vehicle.InsurancePolicies.Tests.Mocks
 {
   class MockVehicleRepository
   {
-    static IEnumerable<VehicleEntity> _vehicles => new VehicleEntity[]
-    {
-      new()
-      {
-        VehicleId = new ObjectId("647825af2c728e9a9974643a"),
-        Plate = "AAA-123",
-        Model = "Nissan",
-        HasInspection = true
-      },
-      new()
-      {
-        VehicleId = new ObjectId("647825af2c728e9a9974643b"),
-        Plate = "BBB-123",
-        Model = "Toyota",
-        HasInspection = false
-      },
-      new()
-      {
-        VehicleId = new ObjectId("647825af2c728e9a9974643c"),
-        Plate = "CCC-123",
-        Model = "Volkswagen",
-        HasInspection = true
-      }
-    };
-
+    static readonly IEnumerable<VehicleEntity> _vehicles = FakeVehicleCommand.Vehicles;
     static readonly IQueryable<VehicleEntity> _vehiclesQuery = _vehicles.AsQueryable();
 
     public static Mock<IVehicleRepository> GetMock()
