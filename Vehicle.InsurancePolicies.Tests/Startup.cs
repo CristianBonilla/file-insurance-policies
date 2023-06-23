@@ -32,10 +32,8 @@ namespace Vehicle.InsurancePolicies.Tests
         .AddJsonFile("appsettings.json", false, true)
         .Build();
       Mock<VehicleInsurancePoliciesContext> mockContext = new();
-      Mock<IVehicleInsurancePoliciesRepositoryContext> mockRepositoryContext = new();
       serviceCollection.AddSingleton(configuration);
       serviceCollection.AddScoped(_ => mockContext.Object);
-      serviceCollection.AddScoped(_ => mockRepositoryContext.Object);
       startup.ServiceCollection = serviceCollection;
 
       return startup;
