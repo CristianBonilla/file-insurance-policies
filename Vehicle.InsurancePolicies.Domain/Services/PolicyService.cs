@@ -7,6 +7,7 @@ using Vehicle.InsurancePolicies.Domain.Entities;
 using Vehicle.InsurancePolicies.Domain.Entities.SourceValues;
 using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 using Vehicle.InsurancePolicies.Domain.Extensions;
+using Vehicle.InsurancePolicies.Domain.Helpers;
 using Vehicle.InsurancePolicies.Domain.Repositories;
 
 namespace Vehicle.InsurancePolicies.Domain.Services
@@ -38,8 +39,8 @@ namespace Vehicle.InsurancePolicies.Domain.Services
 
     public async Task<PolicyTransfer> AddPolicy(PolicyEntity policy)
     {
-      DateTime startDate = GetDateRandom();
-      DateTime endDate = GetDateRandom();
+      DateTimeHelper helper = new();
+      var (startDate, endDate) = helper.RandomDates;
       CheckPolicy(policy, startDate, endDate);
       _policyRepository.Create(policy);
       PolicyTermEntity policyTerm = new()
