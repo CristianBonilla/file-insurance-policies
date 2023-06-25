@@ -89,7 +89,8 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
       async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
-      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
+      Assert.ThrowsAsync(
+        Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"The client with the id \"{sourceValues.CustomerId}\" does not exist"),
         AddPolicyAsync);
     }
@@ -110,7 +111,8 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
       async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
-      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
+      Assert.ThrowsAsync(
+        Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"The vehicle with the id \"{sourceValues.VehicleId}\" does not exist"),
         AddPolicyAsync);
     }
@@ -133,7 +135,8 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
       async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
-      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
+      Assert.ThrowsAsync(
+        Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"There are non-existent coverages: {string.Join(", ", fakeCoverageIds)}"),
         AddPolicyAsync);
     }
@@ -155,12 +158,15 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
       async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
-      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>().And.Message.AnyOf(new[]
-      {
-        $"The start date cannot be earlier than the taken date. \"Taken date: {takenDate}\" \"Start date random: {startDate}\"",
-        $"The end date must be after the start date. \"Start date random: {startDate}\". \"End date random: {endDate}\"",
-        $"The policy cannot be created if it is not current. \"End date random: {endDate}\". \"Current date: {DateTime.Now}\""
-      }), AddPolicyAsync);
+      Assert.ThrowsAsync(
+        Is.TypeOf<ServiceErrorException>()
+          .And.Message.AnyOf(new[]
+          {
+            $"The start date cannot be earlier than the taken date. \"Taken date: {takenDate}\" \"Start date random: {startDate}\"",
+            $"The end date must be after the start date. \"Start date random: {startDate}\". \"End date random: {endDate}\"",
+            $"The policy cannot be created if it is not current. \"End date random: {endDate}\". \"Current date: {DateTime.Now}\""
+          }),
+        AddPolicyAsync);
     }
 
     [Test]
@@ -207,6 +213,53 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
         Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"Policy not found with policy number \"{policyNumber}\""),
         FindPolicyByNumber);
+    }
+
+    [Test]
+    public void Should_Find_Policy_By_Plate_Vehicle()
+    {
+      // Arrange
+      string plate = FakeVehicleCommand.Vehicle.Plate;
+
+      // Act
+      PolicyTransfer policyTransfer = _policyService.FindPolicyByPlateVehicle(plate);
+
+      // Assert
+      Assert.That(policyTransfer, Is.Not.Null);
+    }
+
+    [Test]
+    public void Should_Throw_Exception_If_Vehicle_Not_Found()
+    {
+      // Arrange
+      string? plate = null;
+
+      // Act
+      void FindPolicyByPlateVehicle() => _policyService.FindPolicyByPlateVehicle(plate);
+
+      // Assert
+      Assert.Throws(
+        Is.TypeOf<ServiceErrorException>()
+          .And.Message.EqualTo($"Vehicle not found with plate \"{plate}\""),
+        FindPolicyByPlateVehicle);
+    }
+
+    [Test]
+    public void Should_Throw_Exception_If_Policy_Not_Found_By_Vehicle_Id()
+    {
+      // Arrange
+      ObjectId vehicleId = new("647825af2c728e9a9974643c");
+      VehicleEntity vehicle = FakeVehicleCommand.Vehicles.Single(vehicle => vehicle.VehicleId == vehicleId);
+      string plate = vehicle.Plate;
+
+      // Act
+      void FindPolicyByPlateVehicle() => _policyService.FindPolicyByPlateVehicle(plate);
+
+      // Assert
+      Assert.Throws(
+        Is.TypeOf<ServiceErrorException>()
+          .And.Message.EqualTo($"Policy not found with vehicle identifier \"{vehicle.VehicleId}\""),
+        FindPolicyByPlateVehicle);
     }
   }
 }
