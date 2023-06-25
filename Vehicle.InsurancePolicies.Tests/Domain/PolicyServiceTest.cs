@@ -86,12 +86,12 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
         .Returns((startDate, endDate));
 
       // Act
-      async Task addPolicyAsync() => await _policyService.AddPolicy(policy);
+      async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
       Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"The client with the id \"{sourceValues.CustomerId}\" does not exist"),
-        addPolicyAsync);
+        AddPolicyAsync);
     }
 
     [Test]
@@ -107,12 +107,12 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
         .Returns((startDate, endDate));
 
       // Act
-      async Task addPolicyAsync() => await _policyService.AddPolicy(policy);
+      async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
       Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"The vehicle with the id \"{sourceValues.VehicleId}\" does not exist"),
-        addPolicyAsync);
+        AddPolicyAsync);
     }
 
     [Test]
@@ -130,12 +130,37 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
         .Returns((startDate, endDate));
 
       // Act
-      async Task addPolicyAsync() => await _policyService.AddPolicy(policy);
+      async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
 
       // Assert
       Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
           .And.Message.EqualTo($"There are non-existent coverages: {string.Join(", ", fakeCoverageIds)}"),
-        addPolicyAsync);
+        AddPolicyAsync);
+    }
+
+    [TestCase("2022-10-24", "2023-12-31")]
+    [TestCase("2023-1-23", "2022-12-31")]
+    [TestCase("2023-1-23", "2023-1-30")]
+    public void Should_Throw_Exceptions_If_Dates_Are_Invalid(DateTime startDate, DateTime endDate)
+    {
+      // Arrange
+      PolicyEntity policy = FakePolicyCommand.PolicyRequest;
+      DateTime takenDate = policy.TakenDate;
+      FakePolicyCommand.UpdatePolicySourceValues(policy);
+      PolicySourceValues sourceValues = policy.GetSourceValues();
+      _mockHelper.SetupGet(expression => expression.RandomDates)
+        .Returns((startDate, endDate));
+
+      // Act
+      async Task AddPolicyAsync() => await _policyService.AddPolicy(policy);
+
+      // Assert
+      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>().And.Message.AnyOf(new[]
+      {
+        $"The start date cannot be earlier than the taken date. \"Taken date: {takenDate}\" \"Start date random: {startDate}\"",
+        $"The end date must be after the start date. \"Start date random: {startDate}\". \"End date random: {endDate}\"",
+        $"The policy cannot be created if it is not current. \"End date random: {endDate}\". \"Current date: {DateTime.Now}\""
+      }), AddPolicyAsync);
     }
   }
 }
