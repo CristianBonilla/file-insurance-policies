@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Vehicle.InsurancePolicies.Domain.Entities\Vehicle.InsurancePolicies.Domain.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Identity\Auth\" />
-  </ItemGroup>
-
 </Project>

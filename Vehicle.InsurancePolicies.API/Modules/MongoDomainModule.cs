@@ -1,7 +1,9 @@
 using Autofac;
+using Vehicle.InsurancePolicies.Contracts.Helpers;
 using Vehicle.InsurancePolicies.Contracts.MongoRepository;
 using Vehicle.InsurancePolicies.Contracts.Services;
 using Vehicle.InsurancePolicies.Domain.Context;
+using Vehicle.InsurancePolicies.Domain.Helpers;
 using Vehicle.InsurancePolicies.Domain.Repositories;
 using Vehicle.InsurancePolicies.Domain.Services;
 using Vehicle.InsurancePolicies.Infrastructure.MongoRepository;
@@ -12,6 +14,10 @@ namespace Vehicle.InsurancePolicies.API.Modules
   {
     protected override void Load(ContainerBuilder builder)
     {
+      builder.RegisterType<HelperWrapper>()
+        .As<IHelper>()
+        .InstancePerLifetimeScope();
+
       builder.RegisterGeneric(typeof(RepositoryContext<>))
         .As(typeof(IRepositoryContext<>))
         .InstancePerLifetimeScope();

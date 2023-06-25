@@ -1,19 +1,20 @@
 using System.Net;
 using MongoDB.Bson;
 using Vehicle.InsurancePolicies.Contracts.Exceptions;
+using Vehicle.InsurancePolicies.Contracts.Helpers;
 using Vehicle.InsurancePolicies.Contracts.Services;
 using Vehicle.InsurancePolicies.Domain.Context;
 using Vehicle.InsurancePolicies.Domain.Entities;
 using Vehicle.InsurancePolicies.Domain.Entities.SourceValues;
 using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 using Vehicle.InsurancePolicies.Domain.Extensions;
-using Vehicle.InsurancePolicies.Domain.Helpers;
 using Vehicle.InsurancePolicies.Domain.Repositories;
 
 namespace Vehicle.InsurancePolicies.Domain.Services
 {
   public class PolicyService : IPolicyService
   {
+    readonly IHelper _helper;
     readonly IVehicleInsurancePoliciesRepositoryContext _context;
     readonly IVehicleRepository _vehicleRepository;
     readonly ICustomerRepository _customerRepository;
@@ -22,6 +23,7 @@ namespace Vehicle.InsurancePolicies.Domain.Services
     readonly IPolicyTermRepository _policyTermRepository;
 
     public PolicyService(
+      IHelper helper,
       IVehicleInsurancePoliciesRepositoryContext context,
       IVehicleRepository vehicleRepository,
       ICustomerRepository customerRepository,
@@ -35,12 +37,12 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       _coverageRepository = coverageRepository;
       _policyRepository = policyRepository;
       _policyTermRepository = policyTermRepository;
+      _helper = helper;
     }
 
     public async Task<PolicyTransfer> AddPolicy(PolicyEntity policy)
     {
-      DateTimeHelper helper = new();
-      var (startDate, endDate) = helper.RandomDates;
+      var (startDate, endDate) = _helper.RandomDates;
       CheckPolicy(policy, startDate, endDate);
       _policyRepository.Create(policy);
       PolicyTermEntity policyTerm = new()
@@ -52,6 +54,7 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       };
       _policyTermRepository.Create(policyTerm);
       await _context.SaveAsync();
+      var d = _policyRepository.Get().ToArray();
       PolicyTransfer policyTransfer = FindPolicyByNumber(policy.PolicyNumber);
 
       return policyTransfer;
@@ -142,20 +145,6 @@ namespace Vehicle.InsurancePolicies.Domain.Services
         Coverages = coverages,
         PolicyTerm = policyTerm
       };
-    }
-
-    private static DateTime GetDateRandom(int yearRange = 10)
-    {
-      int middle = yearRange / 2;
-      DateTime start = new(DateTime.Now.Year - middle, 1, 1);
-      DateTime end = DateTime.Now.AddYears(middle);
-      Random random = new();
-      int range = (end - start).Days;
-
-      return start.AddDays(random.Next(range))
-        .AddHours(random.Next(0, 24))
-        .AddMinutes(random.Next(0, 60))
-        .AddSeconds(random.Next(0, 60));
     }
   }
 }

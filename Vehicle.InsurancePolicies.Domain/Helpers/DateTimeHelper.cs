@@ -2,9 +2,7 @@ namespace Vehicle.InsurancePolicies.Domain.Helpers
 {
   public class DateTimeHelper
   {
-    public (DateTime StartDate, DateTime EndDate) RandomDates => (GetRandomDate(), GetRandomDate());
-
-    protected virtual DateTime GetRandomDate(int yearRange = 10)
+    public static DateTime GetRandomDate(int yearRange = 10)
     {
       int middle = yearRange / 2;
       DateTime start = new(DateTime.Now.Year - middle, 1, 1);
