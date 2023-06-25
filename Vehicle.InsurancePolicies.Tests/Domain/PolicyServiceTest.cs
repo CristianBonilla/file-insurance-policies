@@ -1,11 +1,13 @@
+using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using Moq;
-using System.Linq.Expressions;
+using Vehicle.InsurancePolicies.Contracts.Exceptions;
 using Vehicle.InsurancePolicies.Contracts.Helpers;
 using Vehicle.InsurancePolicies.Contracts.Services;
 using Vehicle.InsurancePolicies.Domain.Context;
 using Vehicle.InsurancePolicies.Domain.Entities;
+using Vehicle.InsurancePolicies.Domain.Entities.SourceValues;
 using Vehicle.InsurancePolicies.Domain.Entities.Transfers;
 using Vehicle.InsurancePolicies.Domain.Extensions;
 using Vehicle.InsurancePolicies.Domain.Repositories;
@@ -31,7 +33,7 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
     [SetUp]
     public void SetUp()
     {
-      _serviceCollection.AddScoped( _ => _mockHelper.Object);
+      _serviceCollection.AddScoped(_ => _mockHelper.Object);
       _serviceCollection.AddTransient(_ => _mockRepositoryContext.Object);
       _serviceCollection.AddTransient(_ => _mockVehicleRepository.Object);
       _serviceCollection.AddTransient(_ => _mockCustomerRepository.Object);
@@ -49,8 +51,8 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
     {
       // Arrange
       PolicyEntity policy = FakePolicyCommand.PolicyRequest;
-      policy.SetSourceValues(FakePolicyCommand.PolicyRequestSourceValues);
-      var(startDate, endDate) = FakePolicyTermCommand.PolicyTermDates;
+      FakePolicyCommand.UpdatePolicySourceValues(policy);
+      var (startDate, endDate) = FakePolicyTermCommand.PolicyTermDates;
       _mockHelper.SetupGet(expression => expression.RandomDates)
         .Returns((startDate, endDate));
 
@@ -69,6 +71,71 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
       _mockRepositoryContext.Verify(expression => expression.SaveAsync(), Times.Once());
       Assert.That(policyTransfer, Is.Not.Null);
       Assert.That(policyTransfer.Policy, Is.EqualTo(policy));
+    }
+
+    [Test]
+    public void Should_Throw_Exception_If_Non_Existent_Customer()
+    {
+      // Arrange
+      PolicyEntity policy = FakePolicyCommand.PolicyRequest;
+      FakePolicyCommand.UpdatePolicySourceValues(policy);
+      policy.CustomerId = ObjectId.GenerateNewId();
+      PolicySourceValues sourceValues = policy.GetSourceValues();
+      var (startDate, endDate) = FakePolicyTermCommand.PolicyTermDates;
+      _mockHelper.SetupGet(expression => expression.RandomDates)
+        .Returns((startDate, endDate));
+
+      // Act
+      async Task addPolicyAsync() => await _policyService.AddPolicy(policy);
+
+      // Assert
+      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
+          .And.Message.EqualTo($"The client with the id \"{sourceValues.CustomerId}\" does not exist"),
+        addPolicyAsync);
+    }
+
+    [Test]
+    public void Should_Throw_Exception_If_Non_Existent_Vehicle()
+    {
+      // Arrange
+      PolicyEntity policy = FakePolicyCommand.PolicyRequest;
+      FakePolicyCommand.UpdatePolicySourceValues(policy);
+      policy.VehicleId = ObjectId.GenerateNewId();
+      PolicySourceValues sourceValues = policy.GetSourceValues();
+      var (startDate, endDate) = FakePolicyTermCommand.PolicyTermDates;
+      _mockHelper.SetupGet(expression => expression.RandomDates)
+        .Returns((startDate, endDate));
+
+      // Act
+      async Task addPolicyAsync() => await _policyService.AddPolicy(policy);
+
+      // Assert
+      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
+          .And.Message.EqualTo($"The vehicle with the id \"{sourceValues.VehicleId}\" does not exist"),
+        addPolicyAsync);
+    }
+
+    [Test]
+    public void Should_Throw_Exception_If_Non_Existent_Coverages()
+    {
+      // Arrange
+      PolicyEntity policy = FakePolicyCommand.PolicyRequest;
+      ObjectId[] fakeCoverageIds = { ObjectId.GenerateNewId(), ObjectId.GenerateNewId() };
+      policy.Coverages.Add(fakeCoverageIds[0]);
+      policy.Coverages.Add(fakeCoverageIds[1]);
+      FakePolicyCommand.UpdatePolicySourceValues(policy);
+      PolicySourceValues sourceValues = policy.GetSourceValues();
+      var (startDate, endDate) = FakePolicyTermCommand.PolicyTermDates;
+      _mockHelper.SetupGet(expression => expression.RandomDates)
+        .Returns((startDate, endDate));
+
+      // Act
+      async Task addPolicyAsync() => await _policyService.AddPolicy(policy);
+
+      // Assert
+      Assert.ThrowsAsync(Is.TypeOf<ServiceErrorException>()
+          .And.Message.EqualTo($"There are non-existent coverages: {string.Join(", ", fakeCoverageIds)}"),
+        addPolicyAsync);
     }
   }
 }

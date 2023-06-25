@@ -1,14 +1,14 @@
 using MongoDB.Bson;
 using Vehicle.InsurancePolicies.Domain.Entities;
-using Vehicle.InsurancePolicies.Domain.Entities.SourceValues;
+using Vehicle.InsurancePolicies.Domain.Extensions;
 
 namespace Vehicle.InsurancePolicies.Tests.Commands
 {
   class FakePolicyCommand
   {
-    private static readonly ObjectId[] _coverageIds = FakeCoverageCommand.Coverages
+    private static readonly ICollection<ObjectId> _coverageIds = FakeCoverageCommand.Coverages
       .Select(coverage => coverage.CoverageId)
-      .ToArray();
+      .ToList();
 
     public static ObjectId PolicyId => new("64782b6c2c728e9a9974643f");
 
@@ -35,25 +35,7 @@ namespace Vehicle.InsurancePolicies.Tests.Commands
       MaxValueCovered = 675920000,
       TakenDate = new(2022, 11, 24),
       PolicyNumber = new("b29bff0a-9bb7-4734-9672-cf255457198b"),
-      Coverages = _coverageIds.Skip(2).ToArray()
-    };
-
-    public static PolicySourceValues PolicySourceValues => new()
-    {
-      VehicleId = Policy.VehicleId.ToString(),
-      CustomerId = Policy.CustomerId.ToString(),
-      Coverages = Policy.Coverages
-        .Select(coverageId => coverageId.ToString())
-        .ToArray()
-    };
-
-    public static PolicySourceValues PolicyRequestSourceValues => new()
-    {
-      VehicleId = PolicyRequest.VehicleId.ToString(),
-      CustomerId = PolicyRequest.CustomerId.ToString(),
-      Coverages = PolicyRequest.Coverages
-        .Select(coverageId => coverageId.ToString())
-        .ToArray()
+      Coverages = _coverageIds.Skip(2).ToList()
     };
 
     public static ICollection<PolicyEntity> Policies => new List<PolicyEntity>()
@@ -68,8 +50,20 @@ namespace Vehicle.InsurancePolicies.Tests.Commands
         MaxValueCovered = 322000000,
         TakenDate = new(2023, 3, 13, 14, 10, 30),
         PolicyNumber = new("2fa069d1-44e8-4496-8cf3-d171631cca7f"),
-        Coverages = _coverageIds.SkipLast(1).ToArray()
+        Coverages = _coverageIds.SkipLast(1).ToList()
       }
     };
+
+    public static void UpdatePolicySourceValues(PolicyEntity policy)
+    {
+      policy.SetSourceValues(new()
+      {
+        VehicleId = policy.VehicleId.ToString(),
+        CustomerId = policy.CustomerId.ToString(),
+        Coverages = policy.Coverages
+          .Select(coverageId => coverageId.ToString())
+          .ToList()
+      });
+    }
   }
 }

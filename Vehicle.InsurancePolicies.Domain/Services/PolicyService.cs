@@ -54,7 +54,6 @@ namespace Vehicle.InsurancePolicies.Domain.Services
       };
       _policyTermRepository.Create(policyTerm);
       await _context.SaveAsync();
-      var d = _policyRepository.Get().ToArray();
       PolicyTransfer policyTransfer = FindPolicyByNumber(policy.PolicyNumber);
 
       return policyTransfer;
