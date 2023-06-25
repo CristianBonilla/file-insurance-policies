@@ -179,5 +179,34 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
         });
       }
     }
+
+    [Test]
+    public void Should_Find_Policy_By_Number()
+    {
+      // Arrange
+      Guid policyNumber = FakePolicyCommand.Policy.PolicyNumber;
+
+      // Act
+      PolicyTransfer policyTransfer = _policyService.FindPolicyByNumber(policyNumber);
+
+      // Assert
+      Assert.That(policyTransfer, Is.Not.Null);
+    }
+
+    [Test]
+    public void Should_Throw_Exception_If_Policy_Not_Found()
+    {
+      // Arrange
+      Guid policyNumber = Guid.NewGuid();
+
+      // Act
+      void FindPolicyByNumber() => _policyService.FindPolicyByNumber(policyNumber);
+
+      // Assert
+      Assert.Throws(
+        Is.TypeOf<ServiceErrorException>()
+          .And.Message.EqualTo($"Policy not found with policy number \"{policyNumber}\""),
+        FindPolicyByNumber);
+    }
   }
 }
