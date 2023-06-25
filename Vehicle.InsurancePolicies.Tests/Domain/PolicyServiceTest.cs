@@ -162,5 +162,22 @@ namespace Vehicle.InsurancePolicies.Tests.Domain
         $"The policy cannot be created if it is not current. \"End date random: {endDate}\". \"Current date: {DateTime.Now}\""
       }), AddPolicyAsync);
     }
+
+    [Test]
+    public async Task Should_Return_All_Policies()
+    {
+      await foreach (PolicyTransfer policyTransfer in _policyService.GetPolicies())
+      {
+        Assert.Multiple(() =>
+        {
+          Assert.That(policyTransfer, Is.Not.Null);
+          Assert.That(policyTransfer.Policy, Is.Not.Null);
+          Assert.That(policyTransfer.Customer, Is.Not.Null);
+          Assert.That(policyTransfer.Vehicle, Is.Not.Null);
+          Assert.That(policyTransfer.Coverages, Is.All.Not.Null);
+          Assert.That(policyTransfer.PolicyTerm, Is.Not.Null);
+        });
+      }
+    }
   }
 }
