@@ -9,7 +9,7 @@ namespace Vehicle.InsurancePolicies.Tests.Mocks
 {
   class MockCustomerRepository
   {
-    static readonly IEnumerable<CustomerEntity> _customers = FakeCustomerCommand.Customers;
+    static readonly ICollection<CustomerEntity> _customers = FakeCustomerCommand.Customers;
     static readonly IQueryable<CustomerEntity> _customersQuery = _customers.AsQueryable();
 
     public static Mock<ICustomerRepository> GetMock()

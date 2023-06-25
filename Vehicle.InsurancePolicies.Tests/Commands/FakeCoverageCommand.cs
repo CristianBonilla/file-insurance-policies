@@ -5,21 +5,17 @@ namespace Vehicle.InsurancePolicies.Tests.Commands
 {
   class FakeCoverageCommand
   {
-    public static ObjectId CoverageId => new("649526f8344c23461362816b");
+    public static ObjectId CoverageId => new("647825872c728e9a99746436");
 
     public static CoverageEntity Coverage => new()
     {
       CoverageId = CoverageId,
-      CoverageName = "Defensa jurídica"
+      CoverageName = "Responsabilidad civil bienes y personas"
     };
 
-    public static IEnumerable<CoverageEntity> Coverages => new CoverageEntity[]
+    public static ICollection<CoverageEntity> Coverages => new List<CoverageEntity>()
     {
-      new()
-      {
-        CoverageId = new("647825872c728e9a99746436"),
-        CoverageName = "Responsabilidad civil bienes y personas"
-      },
+      Coverage,
       new()
       {
         CoverageId = new("647825872c728e9a99746437"),

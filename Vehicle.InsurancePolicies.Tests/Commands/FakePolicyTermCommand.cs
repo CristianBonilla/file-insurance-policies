@@ -5,25 +5,21 @@ namespace Vehicle.InsurancePolicies.Tests.Commands
 {
   class FakePolicyTermCommand
   {
-    public static ObjectId PolicyTermId => new("6495323f344c234613628180");
+    public static ObjectId PolicyTermId => new("647874112c728e9a99746440");
 
     public static PolicyTermEntity PolicyTerm => new()
     {
       PolicyTermId = PolicyTermId,
       PolicyId = FakePolicyCommand.PolicyId,
-      StartDate = new(2022, 11, 24, 10, 30, 0),
-      EndDate = new(2023, 6, 20, 15, 1, 50)
+      StartDate = new(2023, 1, 23),
+      EndDate = new(2023, 12, 31)
     };
 
-    public static IEnumerable<PolicyTermEntity> PolicyTerms => new PolicyTermEntity[]
+    public static (DateTime StartDate, DateTime EndDate) PolicyTermDates => (PolicyTerm.StartDate, PolicyTerm.EndDate);
+
+    public static ICollection<PolicyTermEntity> PolicyTerms => new List<PolicyTermEntity>()
     {
-      new()
-      {
-        PolicyTermId = new("647874112c728e9a99746440"),
-        PolicyId = new("64782b6c2c728e9a9974643f"),
-        StartDate = new(2023, 1, 23),
-        EndDate = new(2023, 12, 31)
-      },
+      PolicyTerm,
       new()
       {
         PolicyTermId = new("649023071010edc293bb3ad5"),
